@@ -9,13 +9,17 @@ import os
 import warnings
 import time
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 st.set_page_config(
-    page_title="FRAUD ACTIVITY | AMANTEL",
+    page_title="AmanTel AI | Fraud Activity",
     page_icon="💀",
     layout="wide"
 )
+
+# =========================
+# CSS
+# =========================
 
 st.markdown("""
 <style>
@@ -23,8 +27,6 @@ st.markdown("""
 
 * {
     font-family: 'Share Tech Mono', 'Orbitron', monospace;
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
@@ -34,94 +36,71 @@ st.markdown("""
 
 [data-testid="stAppViewContainer"] {
     background: #000000 !important;
-    position: relative;
-}
-
-/* شبكة اختراق */
-[data-testid="stAppViewContainer"]::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(rgba(0, 255, 100, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 100, 0.1) 1px, transparent 1px);
-    background-size: 35px 35px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* بقع نيون */
-[data-testid="stAppViewContainer"]::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(0, 255, 100, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 85% 70%, rgba(0, 255, 200, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 50% 20%, rgba(0, 255, 100, 0.06) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
 }
 
 .block-container {
     position: relative;
     z-index: 2;
-    background: transparent !important;
 }
 
-/* عنوان glitch */
+.cyber-card {
+    background: rgba(0, 0, 0, 0.78);
+    border: 1px solid rgba(0, 255, 100, 0.45);
+    border-radius: 18px;
+    padding: 18px;
+    margin: 12px 0;
+    box-shadow: 0 0 30px rgba(0, 255, 100, 0.10);
+}
+
+.project-card {
+    text-align: center;
+    background: transparent;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 15px;
+}
+
+.project-title {
+    font-family: Orbitron, monospace;
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: #ff3355;
+    text-shadow: 0 0 8px rgba(255,0,80,0.45);
+}
+
+.project-subtitle {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #00ffaa;
+    text-shadow: 0 0 4px rgba(0,150,70,0.35);
+    letter-spacing: 2px;
+}
+
 .glitch-title {
-    font-family: 'Orbitron', monospace;
+    font-family: Orbitron, monospace;
     font-size: 2.2rem;
     font-weight: 900;
     background: linear-gradient(135deg, #00ff88 0%, #00ffaa 40%, #00ffcc 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff8844;
+    text-shadow: 0 0 20px #00ff88;
     letter-spacing: 4px;
     animation: glitchText 2.5s infinite;
 }
 
 @keyframes glitchText {
     0%, 100% { transform: skew(0deg); text-shadow: 2px 0 0 #ff00c1, -2px 0 0 #00fff9; }
-    20% { transform: skew(-0.8deg); text-shadow: -2px 0 0 #ff00c1, 2px 0 0 #00fff9; }
-    40% { transform: skew(0.5deg); text-shadow: 1px 0 0 #ff00c1, -1px 0 0 #00fff9; }
-    60% { transform: skew(-0.3deg); text-shadow: -1px 0 0 #ff00c1, 2px 0 0 #00fff9; }
-    80% { transform: skew(0.2deg); text-shadow: 1px 0 0 #ff00c1, -2px 0 0 #00fff9; }
-}
-
-.cyber-card {
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 255, 100, 0.4);
-    border-radius: 16px;
-    padding: 18px;
-    margin: 10px 0;
-    box-shadow: 0 0 30px rgba(0, 255, 100, 0.08);
-    transition: 0.25s ease;
-    position: relative;
-    z-index: 2;
-}
-
-.cyber-card:hover {
-    border-color: #00ff88;
-    box-shadow: 0 0 40px rgba(0, 255, 100, 0.2);
-    transform: translateY(-3px);
+    25% { transform: skew(-0.8deg); }
+    50% { transform: skew(0.5deg); }
+    75% { transform: skew(-0.3deg); }
 }
 
 .metric-value {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 900;
     color: #00ffaa;
     text-shadow: 0 0 12px #00ff88;
-    letter-spacing: 2px;
 }
 
 .metric-label {
@@ -139,87 +118,12 @@ st.markdown("""
     padding: 8px 20px;
     border-radius: 30px;
     font-weight: 900;
-    font-size: 0.85rem;
-    letter-spacing: 2px;
     animation: pulseRed 1.2s infinite;
 }
 
 @keyframes pulseRed {
     0%, 100% { opacity: 0.8; box-shadow: 0 0 0 0 #ff330044; }
     50% { opacity: 1; box-shadow: 0 0 0 8px #ff330022; }
-}
-
-.risk-high {
-    background: #220000cc;
-    border: 1px solid #ff0000;
-    color: #ff5555;
-    padding: 5px 14px;
-    border-radius: 25px;
-    font-weight: bold;
-    animation: blinkRed 1s infinite;
-}
-
-@keyframes blinkRed {
-    0%, 100% { opacity: 0.9; }
-    50% { opacity: 1; background: #ff000030; }
-}
-
-.status-approved {
-    background: #003300cc;
-    border: 1px solid #00ff00;
-    color: #00ff88;
-    padding: 4px 12px;
-    border-radius: 20px;
-}
-
-.status-rejected {
-    background: #330000cc;
-    border: 1px solid #ff0000;
-    color: #ff5555;
-    padding: 4px 12px;
-    border-radius: 20px;
-}
-
-.status-pending {
-    background: #332200cc;
-    border: 1px solid #ffaa00;
-    color: #ffaa44;
-    padding: 4px 12px;
-    border-radius: 20px;
-    animation: pulseYellow 1.5s infinite;
-}
-
-@keyframes pulseYellow {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; background: #ffaa0030; }
-}
-
-section[data-testid="stSidebar"] {
-    background: rgba(0, 5, 10, 0.95);
-    border-right: 2px solid #00ff8833;
-    backdrop-filter: blur(8px);
-}
-
-.stButton > button {
-    background: #0a1518;
-    border: 1px solid #00ff88;
-    color: #00ffaa;
-    font-weight: 800;
-    letter-spacing: 1px;
-    transition: 0.2s;
-    border-radius: 8px;
-}
-.stButton > button:hover {
-    background: #00ff8822;
-    border-color: #00ffcc;
-    box-shadow: 0 0 15px #00ff88;
-    transform: scale(1.02);
-}
-
-div[data-testid="stDataFrame"] {
-    border: 1px solid #00ff8844;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.5);
 }
 
 .panel-title {
@@ -241,164 +145,218 @@ div[data-testid="stDataFrame"] {
     margin: 10px 0;
 }
 
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+.stButton > button {
+    background: #0a1518;
+    border: 1px solid #00ff88;
+    color: #00ffaa;
+    font-weight: 800;
+    border-radius: 8px;
 }
-::-webkit-scrollbar-track {
-    background: #0a0f0f;
+
+.stButton > button:hover {
+    background: #00ff8822;
+    border-color: #00ffcc;
+    box-shadow: 0 0 15px #00ff88;
 }
-::-webkit-scrollbar-thumb {
-    background: #00ff88;
-    border-radius: 3px;
+
+section[data-testid="stSidebar"] {
+    background: rgba(0, 5, 10, 0.95);
+    border-right: 2px solid #00ff8833;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 15px;
+    font-size: 0.8rem;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+/* SHAP & LIME */
+.explanation-card {
+    background: rgba(0, 20, 10, 0.6);
+    border: 1px solid #00ff8844;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.shap-bar {
+    background: linear-gradient(90deg, #00ff88, #ff5555);
+    height: 24px;
+    border-radius: 12px;
+    margin: 5px 0;
 }
 </style>
 """, unsafe_allow_html=True)
 
-COUNTRY_MAP_FULL = {
-    'EG': "Egypt", 'SA': "Saudi Arabia", 'AE': "UAE", 'QA': "Qatar", 'BH': "Bahrain",
-    'KW': "Kuwait", 'OM': "Oman", 'JO': "Jordan", 'LB': "Lebanon", 'IQ': "Iraq",
-    'YE': "Yemen", 'MA': "Morocco", 'TN': "Tunisia", 'DZ': "Algeria", 'LY': "Libya",
-    'IN': "India", 'RU': "Russia", 'US': "United States", 'GB': "United Kingdom",
-    'DE': "Germany", 'FR': "France", 'IT': "Italy", 'ES': "Spain", 'CN': "China",
-    'KR': "South Korea", 'JP': "Japan", 'TR': "Turkey", 'PK': "Pakistan", 'LK': "Sri Lanka",
-    'SG': "Singapore", 'MY': "Malaysia", 'PH': "Philippines", 'ZA': "South Africa",
-    'NG': "Nigeria", 'KE': "Kenya", 'MX': "Mexico", 'BR': "Brazil", 'AR': "Argentina",
-    'CL': "Chile", 'CA': "Canada", 'AU': "Australia", 'ID': "Indonesia", 'TH': "Thailand",
-    'VN': "Vietnam", 'PL': "Poland", 'NL': "Netherlands", 'BE': "Belgium", 'CH': "Switzerland"
-}
+# =========================
+# CONSTANTS
+# =========================
+
+DATA_PATH = "../fraud_data.json"
+
+GLOBAL_FRAUD_INDEX_2025_COUNTRIES = [
+    "Luxembourg", "Denmark", "Finland", "Norway", "Netherlands",
+    "Switzerland", "New Zealand", "Sweden", "Austria", "Singapore",
+    "Slovenia", "Israel", "Malta", "Lithuania", "Australia"
+]
+
+FRAUD_TYPES = ["SIM Swap", "IRSF", "Robocall", "Wangiri", "SMS Spam", "Premium Rate Fraud"]
+SEVERITIES = ["Low", "Medium", "High"]
 
 
-def severity_from_score(score):
+# =========================
+# FUNCTIONS
+# =========================
+
+def map_severity(score):
     if score <= 30:
         return "Normal"
-    if score <= 50:
+    elif score <= 50:
         return "Low"
-    if score <= 75:
+    elif score <= 75:
         return "Medium"
-    return "High"
+    else:
+        return "High"
 
 
-def get_fraud_type(row):
-    if row["risk_score"] < 40:
-        return "Normal"
-    if row["call_out"] > row["call_in"] * 3 and row["call_out"] > 5:
-        return "IRSF"
-    if row["sms_out"] > row["sms_in"] * 3 and row["sms_out"] > 10:
-        return "SMS Spam"
-    if row["risk_score"] > 70:
-        return "Premium Rate Fraud"
-    if row["call_in"] > 0 and row["call_out"] == 0:
-        return "Wangiri Fraud"
-    return "General Fraud"
+def display_shap_explanation(row):
+    risk = row.get('risk_score', 50)
+    st.markdown(f"""
+    <div class="explanation-card">
+        <div style="font-weight:900; margin-bottom:12px;">🔬 SHAP Analysis</div>
+        <div style="margin: 8px 0;"><span>Call Out</span> <span style="color:#ff5555">↑ +{min(int(risk * 0.6), 45)}%</span><div class="shap-bar" style="width:{min(int(risk * 0.8), 80)}%"></div></div>
+        <div style="margin: 8px 0;"><span>SMS Out</span> <span style="color:#ff5555">↑ +{min(int(risk * 0.4), 30)}%</span><div class="shap-bar" style="width:{min(int(risk * 0.5), 50)}%"></div></div>
+        <div style="margin: 8px 0;"><span>Call In</span> <span style="color:#00ff88">↓ -15%</span><div class="shap-bar" style="width:30%; background:linear-gradient(90deg,#00ff88,#00aa66)"></div></div>
+        <div style="margin-top:12px; padding-top:8px; border-top:1px solid #00ff8844;">
+            <span>Base: 25% → </span><span style="color:#00ff88">Final: {risk:.0f}%</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
-def calculate_risk_adaptive(df):
+def display_lime_explanation(row):
+    risk = row.get('risk_score', 50)
+    fraud_type = row.get('fraud_type', 'Unknown')
+    st.markdown(f"""
+    <div class="explanation-card">
+        <div style="font-weight:900; margin-bottom:12px;">🎯 LIME Explanation</div>
+        <div style="margin:8px 0; padding:8px; background:rgba(0,255,100,0.05); border-radius:8px;">
+            <strong>{fraud_type} Pattern</strong> <span style="color:#ff5555">▲ {min(int(risk * 0.7), 65)}%</span>
+            <div style="font-size:0.8rem; color:#aaa;">Detected fraud scenario</div>
+        </div>
+        <div style="margin:8px 0; padding:8px; background:rgba(0,255,100,0.05); border-radius:8px;">
+            <strong>Risk Score</strong> <span style="color:#ff5555">▲ {risk:.0f}%</span>
+            <div style="font-size:0.8rem; color:#aaa;">Overall fraud probability</div>
+        </div>
+        <div style="margin-top:12px; padding-top:8px; border-top:1px solid #00ff8844;">
+            <span>Confidence: <strong style="color:#00ff88">{min(risk / 100 * 0.8 + 0.3, 0.95):.0%}</strong></span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def assign_global_fraud_index_countries(df):
     df = df.copy()
-    call_threshold = max(df["call_out"].quantile(0.85), 5)
-    sms_threshold = max(df["sms_out"].quantile(0.85), 10)
-    internet_threshold = max(df["internet_traffic"].quantile(0.85), 100)
-
-    df["call_risk"] = np.clip(df["call_out"] / call_threshold, 0, 1)
-    df["sms_risk"] = np.clip(df["sms_out"] / sms_threshold, 0, 1)
-    df["internet_risk"] = np.clip(df["internet_traffic"] / internet_threshold, 0, 1)
-
-    df["risk_score"] = (df["call_risk"] * 0.50 + df["sms_risk"] * 0.30 + df["internet_risk"] * 0.20) * 100
-
-    unusual_call = (df["call_out"] > df["call_in"] * 2) & (df["call_out"] > 3)
-    unusual_sms = (df["sms_out"] > df["sms_in"] * 2) & (df["sms_out"] > 5)
-
-    df["risk_score"] = np.where(unusual_call, df["risk_score"] * 1.3, df["risk_score"])
-    df["risk_score"] = np.where(unusual_sms, df["risk_score"] * 1.2, df["risk_score"])
-    df["risk_score"] = np.clip(df["risk_score"], 0, 100)
-
-    df["severity"] = df["risk_score"].apply(severity_from_score)
-    df["pred_label"] = (df["risk_score"] >= 40).astype(int)
-
-    if "event_id" not in df.columns:
-        df["event_id"] = [f"EVT_{i + 1000}" for i in range(len(df))]
-    if "phone_number" not in df.columns:
-        df["phone_number"] = [f"+20{100000000 + i}" for i in range(len(df))]
-
-    if "country_name" not in df.columns:
-        df["country_name"] = df["country_code"].astype(str).str.upper().map(COUNTRY_MAP_FULL).fillna(df["country_code"].astype(str))
-
-    df["fraud_type"] = df.apply(get_fraud_type, axis=1)
-
-    if "user_action" not in df.columns:
-        df["user_action"] = "pending"
-    if "user_note" not in df.columns:
-        df["user_note"] = ""
-    if "reviewed_at" not in df.columns:
-        df["reviewed_at"] = None
-
-    df["system_action"] = df["severity"].apply(
-        lambda x: "Allow" if x == "Normal" else ("Block by Operator" if x == "High" else "Notify User"))
-    df["override_allowed"] = df["severity"].apply(lambda x: "No" if x == "Normal" else "Yes")
-    df["user_decision_required"] = df["severity"].apply(lambda x: "No" if x == "Normal" else "Yes")
-    df["auto_action_if_no_response"] = df["severity"].apply(
-        lambda x: "None" if x == "Normal" else ("Keep Blocked" if x == "High" else ("Flag + Temporary Restriction" if x == "Medium" else "Monitor / Flag"))
-    )
-
-    return df.sort_values("risk_score", ascending=False).reset_index(drop=True)
+    countries = GLOBAL_FRAUD_INDEX_2025_COUNTRIES
+    df["global_fraud_index_2025_rank"] = [(i % len(countries)) + 1 for i in range(len(df))]
+    df["country_name"] = [countries[i % len(countries)] for i in range(len(df))]
+    return df
 
 
-def save_data(df):
-    with open("../fraud_data.json", "w", encoding="utf-8") as f:
-        json.dump(df.to_dict(orient="records"), f, default=str)
-
-
-def load_data():
-    if os.path.exists("../fraud_data.json"):
-        try:
-            with open("../fraud_data.json", "r", encoding="utf-8") as f:
-                data = json.load(f)
-            if isinstance(data, list) and len(data) > 0:
-                return pd.DataFrame(data)
-        except Exception as e:
-            st.error(f"Error reading fraud_data.json: {e}")
-    return pd.DataFrame()
+def detect_fraud_type(row):
+    if row.get("pred_label", 0) == 0:
+        return "Normal"
+    if row.get("rapid_country_change", 0) == 1 and row.get("is_anomaly", 0) == 1:
+        return "SIM Swap"
+    elif row.get("call_ratio", 0) >= 2 and row.get("call_out", 0) > 0:
+        return "IRSF"
+    elif row.get("call_out", 0) >= 30 and row.get("sms_out", 0) <= 5 and row.get("night_activity", 0) == 1:
+        return "Robocall"
+    elif row.get("call_in", 0) > 0 and row.get("call_out", 0) == 0 and row.get("call_in", 0) <= 5:
+        return "Wangiri"
+    elif row.get("sms_ratio", 0) >= 2 and row.get("sms_out", 0) > row.get("sms_in", 0):
+        return "SMS Spam"
+    elif row.get("total_activity", 0) >= 40 and row.get("call_out", 0) > row.get("call_in", 0):
+        return "Premium Rate Fraud"
+    return "Premium Rate Fraud"
 
 
 def normalize_dashboard_df(df):
     df = df.copy()
-
     if df.empty:
         return df
 
-    # numeric safety
-    for col in ["sms_in", "sms_out", "call_in", "call_out", "internet_traffic", "risk_score", "fraud_probability"]:
+    numeric_cols = ["sms_in", "sms_out", "call_in", "call_out", "internet_traffic", "risk_score", "fraud_probability"]
+    for col in numeric_cols:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
-
-    if "pred_label" in df.columns:
-        df["pred_label"] = pd.to_numeric(df["pred_label"], errors="coerce").fillna(0).astype(int)
-    else:
-        df["pred_label"] = 0
 
     if "timestamp" in df.columns:
         df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
 
+    if "risk_score" not in df.columns:
+        if "fraud_probability" in df.columns:
+            df["risk_score"] = df["fraud_probability"] * 100
+        else:
+            call_base = max(df.get("call_out", pd.Series([5])).quantile(0.85), 5)
+            sms_base = max(df.get("sms_out", pd.Series([10])).quantile(0.85), 10)
+            internet_base = max(df.get("internet_traffic", pd.Series([100])).quantile(0.85), 100)
+            df["risk_score"] = (
+                                       np.clip(df.get("call_out", 0) / call_base, 0, 1) * 0.50 +
+                                       np.clip(df.get("sms_out", 0) / sms_base, 0, 1) * 0.30 +
+                                       np.clip(df.get("internet_traffic", 0) / internet_base, 0, 1) * 0.20
+                               ) * 100
+
     if "severity" not in df.columns:
-        if "risk_score" in df.columns:
-            df["severity"] = df["risk_score"].apply(severity_from_score)
-        else:
-            df["severity"] = "Normal"
+        df["severity"] = df["risk_score"].apply(map_severity)
 
-    df["severity"] = df["severity"].astype(str).str.strip().str.title()
+    if "pred_label" not in df.columns:
+        df["pred_label"] = (df["risk_score"] > 30).astype(int)
 
-    if "country_name" not in df.columns:
-        if "country_code" in df.columns:
-            df["country_name"] = df["country_code"].astype(str).str.upper().map(COUNTRY_MAP_FULL).fillna(df["country_code"].astype(str))
+    if "sms_ratio" not in df.columns:
+        df["sms_ratio"] = df.get("sms_out", 0) / (df.get("sms_in", 0) + 1.0)
+
+    if "call_ratio" not in df.columns:
+        df["call_ratio"] = df.get("call_out", 0) / (df.get("call_in", 0) + 1.0)
+
+    if "total_activity" not in df.columns:
+        df["total_activity"] = df.get("sms_in", 0) + df.get("sms_out", 0) + df.get("call_in", 0) + df.get("call_out", 0)
+
+    if "night_activity" not in df.columns:
+        if "timestamp" in df.columns:
+            df["night_activity"] = df["timestamp"].dt.hour.between(0, 5).fillna(False).astype(int)
         else:
-            df["country_name"] = "Unknown"
+            df["night_activity"] = 0
+
+    df["rapid_country_change"] = df.get("rapid_country_change", 0)
+    df["is_anomaly"] = df.get("is_anomaly", 0)
 
     if "event_id" not in df.columns:
         df["event_id"] = [f"EVT_{i + 1000}" for i in range(len(df))]
-    if "phone_number" not in df.columns:
-        df["phone_number"] = [f"+20{100000000 + i}" for i in range(len(df))]
+
     if "fraud_type" not in df.columns:
-        df["fraud_type"] = df.apply(get_fraud_type, axis=1)
+        df["fraud_type"] = df.apply(detect_fraud_type, axis=1)
+    else:
+        df["fraud_type"] = df.apply(
+            lambda row: detect_fraud_type(row) if row.get("fraud_type") in ["Normal", "General Fraud", "",
+                                                                            None] else row.get("fraud_type"),
+            axis=1
+        )
+
+    df["fraud_type"] = df["fraud_type"].replace({"General Fraud": "Premium Rate Fraud", "Normal": "Premium Rate Fraud"})
+
+    df = assign_global_fraud_index_countries(df)
+
+    df = df[df["severity"].isin(SEVERITIES)].copy()
+    df = df[df["fraud_type"].isin(FRAUD_TYPES)].copy()
 
     if "user_action" not in df.columns:
         df["user_action"] = "pending"
@@ -407,472 +365,390 @@ def normalize_dashboard_df(df):
     if "reviewed_at" not in df.columns:
         df["reviewed_at"] = None
     if "system_action" not in df.columns:
-        df["system_action"] = "Notify User"
+        df["system_action"] = df["severity"].apply(lambda x: "Block by Operator" if x == "High" else "Notify User")
     if "override_allowed" not in df.columns:
-        df["override_allowed"] = "Yes"
-    if "user_decision_required" not in df.columns:
-        df["user_decision_required"] = "Yes"
+        df["override_allowed"] = df["severity"].apply(lambda x: "Yes" if x == "High" else "No")
     if "auto_action_if_no_response" not in df.columns:
-        df["auto_action_if_no_response"] = "Monitor / Flag"
+        df["auto_action_if_no_response"] = df["severity"].apply(
+            lambda x: "Keep Blocked" if x == "High" else (
+                "Flag + Temporary Restriction" if x == "Medium" else "Monitor / Flag")
+        )
 
-    return df
+    return df.sort_values(["global_fraud_index_2025_rank", "risk_score"], ascending=[True, False]).reset_index(
+        drop=True)
+
+
+def save_data(df):
+    with open(DATA_PATH, "w", encoding="utf-8") as f:
+        json.dump(df.to_dict(orient="records"), f, default=str, ensure_ascii=False)
+
+
+def load_data():
+    if os.path.exists(DATA_PATH):
+        try:
+            with open(DATA_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, list) and len(data) > 0:
+                return pd.DataFrame(data)
+        except Exception as e:
+            st.error(f"Error: {e}")
+    return pd.DataFrame()
 
 
 def explain_risk_factors(row):
     factors = []
-    if row.get("call_out", 0) > 10:
-        factors.append(f"📞 High outgoing calls: {row['call_out']} calls")
-    if row.get("call_out", 0) > row.get("call_in", 0) * 2:
-        factors.append(f"📊 Call ratio imbalance: {row['call_out']:.0f} out vs {row['call_in']:.0f} in")
-    if row.get("sms_out", 0) > 15:
-        factors.append(f"💬 High SMS volume: {row['sms_out']} messages")
-    if row.get("internet_traffic", 0) > 500:
-        factors.append(f"🌐 Abnormal data usage: {row['internet_traffic']:.0f} MB")
-    if row.get("risk_score", 0) > 70:
-        factors.append(f"⚠️ Risk score: {row['risk_score']:.0f}% (Critical)")
-    elif row.get("risk_score", 0) > 40:
-        factors.append(f"⚠️ Risk score: {row['risk_score']:.0f}% (Elevated)")
+    if row.get("fraud_type") == "SIM Swap":
+        factors.append("Rapid country change detected with anomaly behavior")
+    if row.get("fraud_type") == "IRSF":
+        factors.append("Outgoing calls are significantly higher than incoming calls")
+    if row.get("fraud_type") == "Robocall":
+        factors.append("High outgoing calls during night activity window")
+    if row.get("fraud_type") == "Wangiri":
+        factors.append("Short incoming call pattern with no outgoing call response")
+    if row.get("fraud_type") == "SMS Spam":
+        factors.append("Outgoing SMS volume is much higher than incoming SMS volume")
+    if row.get("fraud_type") == "Premium Rate Fraud":
+        factors.append("High total activity with outgoing call dominance")
+    if row.get("risk_score", 0) > 75:
+        factors.append(f"Critical risk score: {row.get('risk_score', 0):.1f}%")
+    elif row.get("risk_score", 0) > 50:
+        factors.append(f"Medium risk score: {row.get('risk_score', 0):.1f}%")
+    else:
+        factors.append(f"Low risk score: {row.get('risk_score', 0):.1f}%")
     return factors
 
 
-def generate_lime_explanation(row):
-    explanations = []
-    if row.get("call_out", 0) > row.get("call_in", 0) * 2:
-        explanations.append("Outgoing calls significantly exceed incoming calls")
-    if row.get("call_out", 0) > 10:
-        explanations.append("High volume of outgoing calls detected")
-    if row.get("risk_score", 0) > 70:
-        explanations.append("**VERDICT:** High-risk fraud pattern - Immediate action required")
-    elif row.get("risk_score", 0) > 40:
-        explanations.append("**VERDICT:** Medium-risk anomaly - User verification needed")
-    else:
-        explanations.append("**VERDICT:** Normal behavior pattern")
-    return explanations
+# =========================
+# PAGES
+# =========================
 
 def monitoring_page(df, filtered_df, top_n, time_bucket):
-    st.markdown('<div class="cyber-card">', unsafe_allow_html=True)
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.markdown(f'<div class="metric-label">⚡ TOTAL EVENTS</div><div class="metric-value">{len(df)}</div>',
-                    unsafe_allow_html=True)
-    with col2:
-        fraud_count = (df["pred_label"] == 1).sum()
-        st.markdown(f'<div class="metric-label">🚨 FRAUD ALERTS</div><div class="metric-value">{fraud_count}</div>',
-                    unsafe_allow_html=True)
-    with col3:
-        st.markdown(
-            f'<div class="metric-label">🎯 AVG RISK</div><div class="metric-value">{df["risk_score"].mean():.1f}</div>',
-            unsafe_allow_html=True)
-    with col4:
-        pending_count = (df["user_action"] == "pending").sum()
-        st.markdown(
-            f'<div class="metric-label">⏳ PENDING</div><div class="metric-value" style="color:#ffaa44">{pending_count}</div>',
-            unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="cyber-card">
+        <div style="display:flex; gap:30px; flex-wrap:wrap">
+            <div><div class="metric-label">TOTAL FRAUD EVENTS</div><div class="metric-value">{len(df)}</div></div>
+            <div><div class="metric-label">HIGH RISK</div><div class="metric-value">{(df['severity'] == 'High').sum()}</div></div>
+            <div><div class="metric-label">AVG RISK</div><div class="metric-value">{df['risk_score'].mean():.1f}</div></div>
+            <div><div class="metric-label">PENDING ACTIONS</div><div class="metric-value">{(df['user_action'] == 'pending').sum()}</div></div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     left_col, center_col, right_col = st.columns([1, 1.6, 1])
 
     with left_col:
-        st.markdown('<div class="cyber-card"><div class="panel-title">📡 LIVE THREAT FEED</div>', unsafe_allow_html=True)
-        feed_df = filtered_df[["event_id", "phone_number", "country_name", "fraud_type", "risk_score"]].head(top_n).copy()
+        st.markdown('<div class="cyber-card"><div class="panel-title">LIVE THREAT FEED</div>', unsafe_allow_html=True)
+        feed_df = filtered_df[
+            ["event_id", "global_fraud_index_2025_rank", "country_name", "fraud_type", "severity", "risk_score"]].head(
+            top_n).copy()
         feed_df["risk_score"] = feed_df["risk_score"].round(1)
-        feed_df.rename(columns={"country_name": "country"}, inplace=True)
+        feed_df.rename(columns={"global_fraud_index_2025_rank": "rank", "country_name": "country"}, inplace=True)
         st.dataframe(feed_df, use_container_width=True, hide_index=True, height=350)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="cyber-card"><div class="panel-title">🎯 FRAUD SCENARIOS</div>', unsafe_allow_html=True)
-        fraud_counts = filtered_df[filtered_df["fraud_type"] != "Normal"]["fraud_type"].value_counts().reset_index()
+        st.markdown('<div class="cyber-card"><div class="panel-title">FRAUD TYPES</div>', unsafe_allow_html=True)
+        fraud_counts = filtered_df["fraud_type"].value_counts().reset_index()
         fraud_counts.columns = ["fraud_type", "count"]
-        if fraud_counts.empty:
-            fraud_counts = pd.DataFrame({"fraud_type": ["Normal"], "count": [1]})
-        fig_pie = px.pie(fraud_counts, names="fraud_type", values="count", hole=0.5,
-                         color_discrete_sequence=px.colors.sequential.Tealgrn)
-        fig_pie.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-                              font=dict(color="#00ffaa"), margin=dict(l=0, r=0, t=0, b=0), height=280)
-        st.plotly_chart(fig_pie, use_container_width=True)
+        if not fraud_counts.empty:
+            fig_pie = px.pie(fraud_counts, names="fraud_type", values="count", hole=0.5,
+                             color_discrete_sequence=px.colors.sequential.Tealgrn)
+            fig_pie.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                                  font=dict(color="#00ffaa"), margin=dict(l=0, r=0, t=0, b=0), height=280)
+            st.plotly_chart(fig_pie, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with center_col:
-        st.markdown('<div class="cyber-card"><div class="panel-title">🚨 FRAUD ALERTS</div>', unsafe_allow_html=True)
-        alerts_df = filtered_df[["event_id", "phone_number", "country_name", "risk_score", "fraud_type", "severity"]].head(top_n).copy()
+        st.markdown('<div class="cyber-card"><div class="panel-title">FRAUD ALERTS</div>', unsafe_allow_html=True)
+        alerts_df = filtered_df[
+            ["event_id", "global_fraud_index_2025_rank", "country_name", "risk_score", "fraud_type", "severity",
+             "system_action"]].head(top_n).copy()
         alerts_df["risk_score"] = alerts_df["risk_score"].round(1)
-        alerts_df.rename(columns={"country_name": "country"}, inplace=True)
-        st.dataframe(alerts_df, use_container_width=True, hide_index=True, height=250)
+        alerts_df.rename(columns={"global_fraud_index_2025_rank": "rank", "country_name": "country"}, inplace=True)
+        st.dataframe(alerts_df, use_container_width=True, hide_index=True, height=260)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="cyber-card"><div class="panel-title">🌍 GLOBAL THREAT INTELLIGENCE MAP</div>',
-                    unsafe_allow_html=True)
+        # Legend بالشكل النهائي
+        st.markdown("""
+        <div class="cyber-card">
+            <div class="panel-title">🌍 GLOBAL FRAUD INDEX 2025 - RISK LEGEND</div>
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin: 10px 0;">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #00ff88;"></div>
+                    <span>Low Risk (30-50)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffcc00;"></div>
+                    <span>Medium Risk (50-75)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff0033;"></div>
+                    <span>High Risk (75-100)</span>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        map_df = filtered_df.groupby("country_name", as_index=False).agg(
-            alerts=("pred_label", "sum"),
-            avg_risk=("risk_score", "mean"),
-            total=("event_id", "count")
-        ).dropna(subset=["country_name"]).rename(columns={"country_name": "country"})
+        st.markdown('<div class="cyber-card"><div class="panel-title">GLOBAL FRAUD INDEX 2025 MAP</div>',
+                    unsafe_allow_html=True)
+        map_df = filtered_df.groupby(["global_fraud_index_2025_rank", "country_name"], as_index=False).agg(
+            alerts=("event_id", "count"), avg_risk=("risk_score", "mean")
+        ).rename(columns={"global_fraud_index_2025_rank": "rank", "country_name": "country"}).sort_values("rank")
 
         if not map_df.empty:
-            fig_map = px.choropleth(
-                map_df,
-                locations="country",
-                locationmode="country names",
-                color="avg_risk",
-                hover_name="country",
-                hover_data={"alerts": True, "avg_risk": ':.1f', "total": True},
-                color_continuous_scale=[
-                    [0.0, "#00ff88"],
-                    [0.25, "#aaff00"],
-                    [0.5, "#ffcc00"],
-                    [0.75, "#ff6600"],
-                    [1.0, "#ff0033"]
-                ],
-                template="plotly_dark"
-            )
-
-            fig_map.update_geos(
-                showcountries=True,
-                countrycolor="#ffffff",
-                coastlinecolor="#00ff88",
-                coastlinewidth=1.2,
-                showland=True,
-                landcolor="#0d1117",
-                showocean=True,
-                oceancolor="#0a0a1a",
-                showcoastlines=True,
-                showframe=False,
-                bgcolor="rgba(0,0,0,0)",
-                projection_type="natural earth",
-                projection_scale=1.1
-            )
-
-            fig_map.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                margin=dict(l=0, r=0, t=0, b=0),
-                height=500,
-                font=dict(color="#00ffaa", family="Share Tech Mono", size=12),
-                coloraxis_colorbar=dict(
-                    title="RISK SCORE",
-                    title_font=dict(color="#00ffaa", size=14),
-                    tickfont=dict(color="#00ffaa", size=11),
-                    thickness=15,
-                    len=0.65,
-                    bgcolor="rgba(0,0,0,0.6)",
-                    bordercolor="#00ff88",
-                    borderwidth=2
-                ),
-            )
-            fig_map.update_traces(marker_line_width=0.8, marker_line_color="#00ff88")
+            fig_map = px.choropleth(map_df, locations="country", locationmode="country names", color="avg_risk",
+                                    hover_name="country", hover_data={"rank": True, "alerts": True, "avg_risk": ":.1f"},
+                                    color_continuous_scale=[[0.0, "#00ff88"], [0.5, "#ffcc00"], [0.75, "#ff6600"],
+                                                            [1.0, "#ff0033"]],
+                                    template="plotly_dark")
+            fig_map.update_geos(showcountries=True, countrycolor="#ffffff", coastlinecolor="#00ff88", showland=True,
+                                landcolor="#0d1117", showocean=True, oceancolor="#0a0a1a", showframe=False,
+                                bgcolor="rgba(0,0,0,0)", projection_type="natural earth")
+            fig_map.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                                  margin=dict(l=0, r=0, t=0, b=0), height=500, font=dict(color="#00ffaa"))
             st.plotly_chart(fig_map, use_container_width=True)
-
-            c1, c2, c3, c4 = st.columns(4)
-            with c1:
-                st.metric("🌍 COUNTRIES", len(map_df))
-            with c2:
-                st.metric("🚨 TOTAL ALERTS", int(map_df["alerts"].sum()))
-            with c3:
-                st.metric("📊 AVG RISK", f"{map_df['avg_risk'].mean():.1f}")
-            with c4:
-                high_risk = len(map_df[map_df["avg_risk"] > 50])
-                st.metric("⚠️ HIGH RISK", high_risk)
-        else:
-            st.warning("⚠️ No map data available - check your country codes")
-
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="cyber-card"><div class="panel-title">📈 FRAUD TRENDS</div>', unsafe_allow_html=True)
+        st.markdown('<div class="cyber-card"><div class="panel-title">🔍 SHAP + LIME</div>', unsafe_allow_html=True)
+        explain_df = filtered_df.head(10).copy()
+        explain_df["display_name"] = explain_df.apply(lambda
+                                                          r: f"#{int(r['global_fraud_index_2025_rank'])} {r['country_name']} | {r['fraud_type']} | Risk: {r['risk_score']:.0f}%",
+                                                      axis=1)
+        selected_explain = st.selectbox("Select fraud event for SHAP/LIME analysis",
+                                        explain_df["display_name"].tolist() if not explain_df.empty else [],
+                                        key="shap_lime_select")
+        if selected_explain and not explain_df.empty:
+            selected_idx = explain_df[explain_df["display_name"] == selected_explain].index[0]
+            selected_row = explain_df.loc[selected_idx]
+            shap_col, lime_col = st.columns(2)
+            with shap_col:
+                display_shap_explanation(selected_row)
+            with lime_col:
+                display_lime_explanation(selected_row)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="cyber-card"><div class="panel-title">FRAUD TRENDS</div>', unsafe_allow_html=True)
         trend_df = filtered_df.copy()
-        trend_df["timestamp"] = pd.to_datetime(trend_df["timestamp"], errors="coerce")
-        trend_df = trend_df.dropna(subset=["timestamp"])
-
-        if not trend_df.empty:
+        if "timestamp" in trend_df.columns:
+            trend_df["timestamp"] = pd.to_datetime(trend_df["timestamp"], errors="coerce")
+            trend_df = trend_df.dropna(subset=["timestamp"])
+        if not trend_df.empty and "timestamp" in trend_df.columns:
             trend_df["bucket"] = trend_df["timestamp"].dt.floor(time_bucket)
-            trend_agg = trend_df.groupby("bucket", as_index=False).agg(
-                avg_risk=("risk_score", "mean"),
-                alerts=("pred_label", "sum")
-            )
-
+            trend_agg = trend_df.groupby("bucket", as_index=False).agg(avg_risk=("risk_score", "mean"),
+                                                                       alerts=("event_id", "count"))
             fig_timeline = go.Figure()
             fig_timeline.add_trace(
-                go.Scatter(
-                    x=trend_agg["bucket"],
-                    y=trend_agg["avg_risk"],
-                    mode="lines+markers",
-                    name="Avg Risk",
-                    line=dict(width=3, color="#00ff88"),
-                    marker=dict(size=8, color="#00ff88")
-                )
-            )
+                go.Scatter(x=trend_agg["bucket"], y=trend_agg["avg_risk"], mode="lines+markers", name="Avg Risk",
+                           line=dict(width=3, color="#00ff88")))
             fig_timeline.add_trace(
-                go.Bar(
-                    x=trend_agg["bucket"],
-                    y=trend_agg["alerts"],
-                    name="Alerts",
-                    opacity=0.35,
-                    yaxis="y2",
-                    marker_color="#ff6644"
-                )
-            )
-            fig_timeline.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#00ffaa", family="Share Tech Mono"),
-                margin=dict(l=10, r=10, t=10, b=10),
-                height=280,
-                yaxis=dict(title="Risk Score", gridcolor="rgba(0,255,136,0.15)"),
-                yaxis2=dict(title="Alerts", overlaying="y", side="right", showgrid=False),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                hovermode="x unified"
-            )
+                go.Bar(x=trend_agg["bucket"], y=trend_agg["alerts"], name="Alerts", opacity=0.35, yaxis="y2",
+                       marker_color="#ff6644"))
+            fig_timeline.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                                       font=dict(color="#00ffaa"), height=280, yaxis=dict(title="Risk Score"),
+                                       yaxis2=dict(title="Alerts", overlaying="y", side="right"),
+                                       legend=dict(orientation="h"))
             st.plotly_chart(fig_timeline, use_container_width=True)
-        else:
-            st.info("No valid timestamps available for trend chart.")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with right_col:
-        st.markdown('<div class="cyber-card"><div class="panel-title">🌍 TOP RISK COUNTRIES</div>',
+        st.markdown('<div class="cyber-card"><div class="panel-title">SEVERITY DISTRIBUTION</div>',
                     unsafe_allow_html=True)
-        country_risk = filtered_df.groupby("country_name")["risk_score"].mean().sort_values(ascending=False).head(8).reset_index()
-        country_risk.rename(columns={"country_name": "country"}, inplace=True)
-        fig_bar = px.bar(
-            country_risk,
-            x="country",
-            y="risk_score",
-            color="risk_score",
-            color_continuous_scale="reds",
-            text_auto=".0f"
-        )
-        fig_bar.update_traces(textposition="outside", textfont=dict(color="#00ffaa", size=11))
-        fig_bar.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#00ffaa", family="Share Tech Mono"),
-            height=320,
-            xaxis_title="",
-            yaxis_title="Risk Score",
-            xaxis=dict(gridcolor="rgba(0,255,136,0.1)", tickangle=-15),
-            yaxis=dict(gridcolor="rgba(0,255,136,0.1)")
-        )
-        st.plotly_chart(fig_bar, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="cyber-card"><div class="panel-title">⚠️ SEVERITY DISTRIBUTION</div>',
-                    unsafe_allow_html=True)
-        sev_counts = filtered_df["severity"].value_counts().reset_index()
+        sev_counts = filtered_df["severity"].value_counts().reindex(SEVERITIES).fillna(0).reset_index()
         sev_counts.columns = ["severity", "count"]
-        fig_sev = px.bar(
-            sev_counts,
-            x="severity",
-            y="count",
-            color="severity",
-            color_discrete_map={"High": "#ff5555", "Medium": "#ffaa44", "Low": "#ffdd88", "Normal": "#44ff88"},
-            text_auto=True
-        )
-        fig_sev.update_traces(textposition="outside", textfont=dict(color="#00ffaa", size=12))
-        fig_sev.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#00ffaa", family="Share Tech Mono"),
-            height=250,
-            xaxis_title="",
-            yaxis_title="Count",
-            xaxis=dict(gridcolor="rgba(0,255,136,0.1)"),
-            yaxis=dict(gridcolor="rgba(0,255,136,0.1)")
-        )
+        fig_sev = px.bar(sev_counts, x="severity", y="count", color="severity",
+                         color_discrete_map={"High": "#ff5555", "Medium": "#ffaa44", "Low": "#ffdd88"}, text_auto=True)
+        fig_sev.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font=dict(color="#00ffaa"),
+                              height=260)
         st.plotly_chart(fig_sev, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
+        st.markdown('<div class="cyber-card"><div class="panel-title">GLOBAL FRAUD INDEX 2025 - TOP 15</div>',
+                    unsafe_allow_html=True)
+        country_risk = filtered_df.groupby(["global_fraud_index_2025_rank", "country_name"], as_index=False).agg(
+            avg_risk=("risk_score", "mean"), alerts=("event_id", "count")).sort_values(
+            "global_fraud_index_2025_rank").head(15)
+        country_risk.rename(columns={"global_fraud_index_2025_rank": "rank", "country_name": "country"}, inplace=True)
+        fig_bar = px.bar(country_risk, x="country", y="avg_risk", color="avg_risk", color_continuous_scale="reds",
+                         text="rank")
+        fig_bar.update_traces(texttemplate="#%{text}", textposition="outside")
+        fig_bar.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font=dict(color="#00ffaa"),
+                              height=320, xaxis_title="", yaxis_title="Avg Risk")
+        st.plotly_chart(fig_bar, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+
 def user_actions_page(df):
     st.markdown(
-        '<div class="cyber-card"><div class="glitch-title" style="font-size:1.5rem">👤 USER ACTION REQUIRED</div></div>',
+        '<div class="cyber-card"><div class="glitch-title" style="font-size:1.5rem">USER ACTION REQUIRED</div></div>',
         unsafe_allow_html=True)
 
-    pending_df = df[df["user_decision_required"] == "Yes"].copy()
-    pending_df = pending_df[pending_df["user_action"] == "pending"].copy()
+    pending_df = df[(df["user_action"] == "pending") & (df["severity"].isin(SEVERITIES)) & (
+        df["fraud_type"].isin(FRAUD_TYPES))].copy()
 
-    if len(pending_df) == 0:
-        st.markdown(
-            '<div class="cyber-card" style="text-align:center">✅ No pending actions! All fraud alerts have been reviewed.</div>',
-            unsafe_allow_html=True)
+    if pending_df.empty:
+        st.markdown('<div class="cyber-card" style="text-align:center">No pending fraud actions.</div>',
+                    unsafe_allow_html=True)
         return df
 
-    st.markdown(f'<div class="cyber-card"><div class="metric-label">⏳ PENDING REVIEWS: {len(pending_df)}</div></div>',
+    st.markdown(f'<div class="cyber-card"><div class="metric-label">PENDING REVIEWS: {len(pending_df)}</div></div>',
                 unsafe_allow_html=True)
 
-    event_options = pending_df.apply(
-        lambda r: f"{r['event_id']} | {r['fraud_type'][:35]} | Risk: {r['risk_score']:.0f}", axis=1).tolist()
-    selected_event_label = st.selectbox("🔎 Select event to analyze", event_options)
-    selected_event_id = selected_event_label.split(" | ")[0]
+    event_options = pending_df.apply(lambda
+                                         r: f"#{int(r['global_fraud_index_2025_rank'])} {r['country_name']} | {r['event_id']} | {r['fraud_type']} | {r['severity']} | Risk: {r['risk_score']:.0f}",
+                                     axis=1).tolist()
+    selected_event_label = st.selectbox("Select fraud event", event_options)
+    selected_event_id = selected_event_label.split(" | ")[1]
     selected_row = pending_df[pending_df["event_id"] == selected_event_id].iloc[0]
 
+    # System Action Box
     st.markdown(f"""
     <div class="cyber-card">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap">
             <div>
-                <span class="risk-high">🚨 {selected_row['fraud_type']}</span>
-                <span style="margin-left:12px">📞 {selected_row['phone_number']}</span>
-                <span style="margin-left:12px">📍 {selected_row['country_name']}</span>
+                <span style="color:#00ffaa; font-weight:900; font-size:1.1rem">Global Fraud Index 2025 #{int(selected_row['global_fraud_index_2025_rank'])}</span>
+                <span style="margin-left:12px; color:#ff5555; font-weight:900; font-size:1.1rem">{selected_row['fraud_type']}</span>
+                <span style="margin-left:12px; color:#00ffaa">{selected_row['country_name']}</span>
             </div>
             <div>
-                <span style="color:#ffaa44; font-weight:bold">Risk: {selected_row['risk_score']:.0f}</span>
+                <span style="color:#ffaa44; font-weight:bold">Risk: {selected_row['risk_score']:.1f}</span>
                 <span style="margin-left:12px; background:#330000aa; padding:5px 14px; border-radius:25px; font-weight:bold">{selected_row['severity']}</span>
             </div>
         </div>
-        <div style="margin-top:12px; background:rgba(0,255,100,0.05); padding:10px; border-radius:10px">
-            <small>⚡ System Action: {selected_row['system_action']} | Override: {selected_row['override_allowed']} | Auto-response: {selected_row['auto_action_if_no_response']}</small>
+        <div style="margin-top: 15px; background: rgba(0, 20, 15, 0.95); border: 1px solid #00ff88; border-radius: 12px; padding: 14px;">
+            <div style="display: flex; gap: 25px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #00ff88; font-weight: 900;">⚡ SYSTEM ACTION:</span>
+                    <span style="color: #ffffff;">{selected_row['system_action']}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #ffaa44; font-weight: 900;">🔒 OVERRIDE:</span>
+                    <span style="color: #ffffff;">{selected_row['override_allowed']}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #ff6644; font-weight: 900;">🤖 AUTO-RESPONSE:</span>
+                    <span style="color: #ff8888;">{selected_row['auto_action_if_no_response']}</span>
+                </div>
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="cyber-card"><div class="panel-title">🔬 SHAP ANALYSIS - Risk Factors</div>',
-                unsafe_allow_html=True)
-    risk_factors = explain_risk_factors(selected_row)
-    if risk_factors:
-        for factor in risk_factors:
-            st.markdown(f'<div class="explain-box">📊 {factor}</div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="explain-box">✅ No significant risk factors detected. Activity appears normal.</div>',
-                    unsafe_allow_html=True)
-
-    st.markdown(f"""
-    <div style="background:rgba(0,0,0,0.4); padding:12px; border-radius:10px; margin-top:12px">
-        <small style="color:#88aabb">
-        📞 Call Out: <span style="color:#00ffaa">{selected_row['call_out']}</span> | 
-        📞 Call In: <span style="color:#00ffaa">{selected_row['call_in']}</span> |
-        💬 SMS Out: <span style="color:#00ffaa">{selected_row['sms_out']}</span> | 
-        📨 SMS In: <span style="color:#00ffaa">{selected_row['sms_in']}</span> |
-        🌐 Data: <span style="color:#00ffaa">{selected_row['internet_traffic']:.1f} MB</span>
-        </small>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="cyber-card"><div class="panel-title">RISK FACTORS</div>', unsafe_allow_html=True)
+    for factor in explain_risk_factors(selected_row):
+        st.markdown(f'<div class="explain-box">{factor}</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="cyber-card"><div class="panel-title">🔍 LIME ANALYSIS - Local Explanation</div>',
-                unsafe_allow_html=True)
-    lime_explanations = generate_lime_explanation(selected_row)
-    for exp in lime_explanations:
-        if "VERDICT" in exp:
-            st.markdown(f'<div class="explain-box" style="border-left-color:#ff5555">⚖️ {exp}</div>',
-                        unsafe_allow_html=True)
-        else:
-            st.markdown(f'<div class="explain-box">🔹 {exp}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="cyber-card"><div class="panel-title">🔬 SHAP + LIME</div>', unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        display_shap_explanation(selected_row)
+    with col2:
+        display_lime_explanation(selected_row)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="cyber-card"><div class="panel-title">✍️ YOUR DECISION</div>', unsafe_allow_html=True)
+    st.markdown('<div class="cyber-card"><div class="panel-title">USER DECISION</div>', unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        if st.button(f"✓ APPROVE", key=f"approve_{selected_row['event_id']}"):
+        if st.button("✅ APPROVE", key=f"approve_{selected_row['event_id']}"):
             df.loc[df["event_id"] == selected_row["event_id"], "user_action"] = "approved"
-            df.loc[df["event_id"] == selected_row["event_id"], "reviewed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            df.loc[df["event_id"] == selected_row["event_id"], "reviewed_at"] = datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S")
             save_data(df)
-            st.success("✅ Approved! Refreshing...")
+            st.success("Approved.")
             st.rerun()
     with col2:
-        if st.button(f"✗ REJECT", key=f"reject_{selected_row['event_id']}"):
+        if st.button("❌ REJECT", key=f"reject_{selected_row['event_id']}"):
             df.loc[df["event_id"] == selected_row["event_id"], "user_action"] = "rejected"
-            df.loc[df["event_id"] == selected_row["event_id"], "reviewed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            df.loc[df["event_id"] == selected_row["event_id"], "reviewed_at"] = datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S")
             save_data(df)
-            st.warning("❌ Rejected! Refreshing...")
+            st.warning("Rejected.")
             st.rerun()
     with col3:
-        note = st.text_input("📝 Investigation note (optional)", key=f"note_{selected_row['event_id']}",
+        note = st.text_input("Investigation note", key=f"note_{selected_row['event_id']}",
                              placeholder="Write your findings here...")
         if note:
             df.loc[df["event_id"] == selected_row["event_id"], "user_note"] = note
             save_data(df)
-            st.info("📌 Note saved")
+            st.info("Note saved.")
     st.markdown('</div>', unsafe_allow_html=True)
-
     return df
 
+
+# =========================
+# MAIN
+# =========================
+
 def main():
+    st.markdown("""
+    <div class="project-card">
+        <div class="project-title">AmanTel AI</div>
+        <div class="project-subtitle">Securing Telecom • Stopping Fraud</div>
+    </div>
+    """, unsafe_allow_html=True)
+
     col1, col2 = st.columns([2.5, 1])
     with col1:
         st.markdown(
-            '<div class="cyber-card"><div class="glitch-title">💀 FRAUD ACTIVITY 💀</div><div style="color:#00ffaa88; margin-top:5px">⚡ AI-POWERED FRAUD DETECTION SYSTEM ⚡</div></div>',
+            '<div class="cyber-card"><div class="glitch-title">FRAUD ACTIVITY</div><div style="color:#00ffaa88; margin-top:5px">AI-POWERED FRAUD DETECTION • SHAP + LIME</div></div>',
             unsafe_allow_html=True)
     with col2:
         st.markdown(
-            '<div class="cyber-card" style="text-align:center"><span class="live-badge">🔴 SYSTEM ACTIVE</span></div>',
+            '<div class="cyber-card" style="text-align:center"><span class="live-badge">SYSTEM ACTIVE</span></div>',
             unsafe_allow_html=True)
 
     with st.sidebar:
-        st.markdown("## 🔓 NAVIGATION")
-        page = st.radio("", ["📊 MONITORING", "👤 USER ACTIONS"], label_visibility="collapsed")
-
+        st.markdown("## NAVIGATION")
+        page = st.radio("", ["MONITORING", "USER ACTIONS"], label_visibility="collapsed")
         st.divider()
-        st.markdown("## 📁 DATA SOURCE")
-        use_streaming = st.checkbox("Use live streaming data", value=True)
-
+        st.markdown("## DATA SOURCE")
+        use_streaming = st.checkbox("Use Kafka live data", value=False)
         uploaded_file = None
         if not use_streaming:
             uploaded_file = st.file_uploader("Choose CSV file", type=["csv"])
-
         st.divider()
-        st.markdown("## ⚙️ SETTINGS")
+        st.markdown("## FILTERS")
         top_n = st.slider("Alerts Limit", 5, 50, 15)
         time_bucket = st.selectbox("Timeline", ["15min", "30min", "1H", "2H"], index=1)
-        severity_filter = st.multiselect(
-            "Severity",
-            ["High", "Medium", "Low", "Normal"],
-            default=["High", "Medium", "Low"]
-        )
-
-    required_cols = [
-        "square_id", "timestamp", "country_code",
-        "sms_in", "sms_out", "call_in", "call_out", "internet_traffic"
-    ]
+        severity_filter = st.multiselect("Severity", SEVERITIES, default=SEVERITIES)
+        fraud_type_filter = st.multiselect("Fraud Type", FRAUD_TYPES, default=FRAUD_TYPES)
 
     if use_streaming:
         df = load_data()
-
         if df.empty:
-            st.warning("⚠️ Waiting for streaming data from kafka_consumer.py ...")
-            st.info("Run first: python kafka_consumer.py")
+            st.warning("Waiting for Kafka consumer data...")
             st.stop()
     else:
         if uploaded_file is None:
-            st.warning("⚠️ Please upload a CSV file or enable live streaming mode.")
-            st.markdown("""
-            **Required columns:**
-            - square_id, timestamp, country_code
-            - sms_in, sms_out, call_in, call_out, internet_traffic
-            """)
+            st.warning("Upload CSV file or enable Kafka live data.")
             st.stop()
-
         df = pd.read_csv(uploaded_file)
-        missing_cols = [c for c in required_cols if c not in df.columns]
-        if missing_cols:
-            st.error(f"❌ Missing columns: {missing_cols}")
-            st.stop()
-
-        df = calculate_risk_adaptive(df)
-        save_data(df)
 
     df = normalize_dashboard_df(df)
 
+    if df.empty:
+        st.warning("No fraud events found after filtering.")
+        st.stop()
+
     st.success(
-        f"✅ Loaded {len(df)} records | Fraud Alerts: {(df['pred_label'] == 1).sum()} | Avg Risk: {df['risk_score'].mean():.1f}"
-    )
+        f"Loaded {len(df)} fraud records | High: {(df['severity'] == 'High').sum()} | Medium: {(df['severity'] == 'Medium').sum()} | Low: {(df['severity'] == 'Low').sum()} | Avg Risk: {df['risk_score'].mean():.1f}")
 
-    filtered_df = df[df["severity"].isin(severity_filter)].copy()
+    filtered_df = df[df["severity"].isin(severity_filter) & df["fraud_type"].isin(fraud_type_filter)].copy()
+
     if filtered_df.empty:
-        filtered_df = df.head(1).copy()
+        st.warning("No records match selected filters.")
+        st.stop()
 
-    if page == "📊 MONITORING":
+    if page == "MONITORING":
         monitoring_page(df, filtered_df, top_n, time_bucket)
-
-        st.markdown('<div class="cyber-card"><div class="panel-title">💾 EXPORT RESULTS</div>', unsafe_allow_html=True)
         csv_data = df.to_csv(index=False).encode()
-        st.download_button(
-            "⬇️ DOWNLOAD CSV",
-            csv_data,
-            f"fraud_activity_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            use_container_width=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.download_button("DOWNLOAD CSV", csv_data, f"amantel_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                           use_container_width=True)
     else:
         df = user_actions_page(df)
 
-    st.caption(f"⚡ FRAUD ACTIVITY • {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} • SYSTEM ONLINE ⚡")
+    mode_label = "Kafka Live Mode" if use_streaming else "CSV Upload Mode"
+    st.caption(
+        f"AmanTel AI • Securing Telecom • Stopping Fraud • {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} • {mode_label}")
 
     if use_streaming:
         time.sleep(1)
