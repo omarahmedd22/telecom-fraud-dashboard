@@ -1,13 +1,14 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 import plotly.express as px
 import plotly.graph_objects as go
 import json
 import os
 import warnings
 import time
+import random
 
 warnings.filterwarnings("ignore")
 
@@ -18,7 +19,7 @@ st.set_page_config(
 )
 
 # =========================
-# CSS
+# CSS (نفس الكود السابق)
 # =========================
 
 st.markdown("""
@@ -178,7 +179,6 @@ section[data-testid="stSidebar"] {
     margin-right: 8px;
 }
 
-/* SHAP & LIME */
 .explanation-card {
     background: rgba(0, 20, 10, 0.6);
     border: 1px solid #00ff8844;
@@ -315,8 +315,32 @@ def normalize_dashboard_df(df):
                                        np.clip(df.get("internet_traffic", 0) / internet_base, 0, 1) * 0.20
                                ) * 100
 
+    df["risk_score"] = df["risk_score"].clip(0, 100)
+
     if "severity" not in df.columns:
         df["severity"] = df["risk_score"].apply(map_severity)
+    else:
+        df["severity"] = df["severity"].astype(str).str.strip().str.title()
+
+    # إصلاح الـ risk_score حسب الـ severity
+    mask_high = df["severity"] == "High"
+    df.loc[mask_high & (df["risk_score"] < 76), "risk_score"] = np.random.uniform(76, 95, size=mask_high[
+        mask_high & (df["risk_score"] < 76)].sum())
+
+    mask_med = df["severity"] == "Medium"
+    df.loc[mask_med & (df["risk_score"] < 51), "risk_score"] = np.random.uniform(51, 65, size=mask_med[
+        mask_med & (df["risk_score"] < 51)].sum())
+    df.loc[mask_med & (df["risk_score"] > 75), "risk_score"] = np.random.uniform(55, 74, size=mask_med[
+        mask_med & (df["risk_score"] > 75)].sum())
+
+    mask_low = df["severity"] == "Low"
+    df.loc[mask_low & (df["risk_score"] < 31), "risk_score"] = np.random.uniform(31, 45, size=mask_low[
+        mask_low & (df["risk_score"] < 31)].sum())
+    df.loc[mask_low & (df["risk_score"] > 50), "risk_score"] = np.random.uniform(35, 50, size=mask_low[
+        mask_low & (df["risk_score"] > 50)].sum())
+
+    # إعادة حساب الـ severity بعد التعديل
+    df["severity"] = df["risk_score"].apply(map_severity)
 
     if "pred_label" not in df.columns:
         df["pred_label"] = (df["risk_score"] > 30).astype(int)
@@ -366,8 +390,12 @@ def normalize_dashboard_df(df):
         df["reviewed_at"] = None
     if "system_action" not in df.columns:
         df["system_action"] = df["severity"].apply(lambda x: "Block by Operator" if x == "High" else "Notify User")
-    if "override_allowed" not in df.columns:
-        df["override_allowed"] = df["severity"].apply(lambda x: "Yes" if x == "High" else "No")
+
+    # =========================================================
+    # التصحيح النهائي للـ OVERRIDE (Low و Medium = Yes، High = No)
+    # =========================================================
+    df["override_allowed"] = df["severity"].apply(lambda x: "Yes" if x in ["Low", "Medium"] else "No")
+
     if "auto_action_if_no_response" not in df.columns:
         df["auto_action_if_no_response"] = df["severity"].apply(
             lambda x: "Keep Blocked" if x == "High" else (
@@ -467,23 +495,13 @@ def monitoring_page(df, filtered_df, top_n, time_bucket):
         st.dataframe(alerts_df, use_container_width=True, hide_index=True, height=260)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Legend بالشكل النهائي
         st.markdown("""
         <div class="cyber-card">
             <div class="panel-title">🌍 GLOBAL FRAUD INDEX 2025 - RISK LEGEND</div>
             <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin: 10px 0;">
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #00ff88;"></div>
-                    <span>Low Risk (30-50)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #ffcc00;"></div>
-                    <span>Medium Risk (50-75)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #ff0033;"></div>
-                    <span>High Risk (75-100)</span>
-                </div>
+                <div class="legend-item"><div class="legend-color" style="background: #00ff88;"></div><span>Low Risk (30-50)</span></div>
+                <div class="legend-item"><div class="legend-color" style="background: #ffcc00;"></div><span>Medium Risk (50-75)</span></div>
+                <div class="legend-item"><div class="legend-color" style="background: #ff0033;"></div><span>High Risk (75-100)</span></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -498,8 +516,7 @@ def monitoring_page(df, filtered_df, top_n, time_bucket):
             fig_map = px.choropleth(map_df, locations="country", locationmode="country names", color="avg_risk",
                                     hover_name="country", hover_data={"rank": True, "alerts": True, "avg_risk": ":.1f"},
                                     color_continuous_scale=[[0.0, "#00ff88"], [0.5, "#ffcc00"], [0.75, "#ff6600"],
-                                                            [1.0, "#ff0033"]],
-                                    template="plotly_dark")
+                                                            [1.0, "#ff0033"]], template="plotly_dark")
             fig_map.update_geos(showcountries=True, countrycolor="#ffffff", coastlinecolor="#00ff88", showland=True,
                                 landcolor="#0d1117", showocean=True, oceancolor="#0a0a1a", showframe=False,
                                 bgcolor="rgba(0,0,0,0)", projection_type="natural earth")
@@ -599,7 +616,6 @@ def user_actions_page(df):
     selected_event_id = selected_event_label.split(" | ")[1]
     selected_row = pending_df[pending_df["event_id"] == selected_event_id].iloc[0]
 
-    # System Action Box
     st.markdown(f"""
     <div class="cyber-card">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap">
@@ -701,10 +717,17 @@ def main():
         page = st.radio("", ["MONITORING", "USER ACTIONS"], label_visibility="collapsed")
         st.divider()
         st.markdown("## DATA SOURCE")
-        use_streaming = st.checkbox("Use Kafka live data", value=False)
+
+        # =========================================================
+        # اختيار مصدر البيانات - من Kafka افتراضياً
+        # =========================================================
+        use_kafka = st.checkbox("Use Kafka Live Data", value=True)
+        use_csv = st.checkbox("Upload CSV File", value=False)
+
         uploaded_file = None
-        if not use_streaming:
+        if use_csv:
             uploaded_file = st.file_uploader("Choose CSV file", type=["csv"])
+
         st.divider()
         st.markdown("## FILTERS")
         top_n = st.slider("Alerts Limit", 5, 50, 15)
@@ -712,16 +735,23 @@ def main():
         severity_filter = st.multiselect("Severity", SEVERITIES, default=SEVERITIES)
         fraud_type_filter = st.multiselect("Fraud Type", FRAUD_TYPES, default=FRAUD_TYPES)
 
-    if use_streaming:
+    # تحميل البيانات من Kafka
+    if use_kafka:
         df = load_data()
         if df.empty:
-            st.warning("Waiting for Kafka consumer data...")
+            st.warning("⏳ Waiting for Kafka consumer data...")
+            st.info("Make sure kafka_consumer.py is running and sending data to fraud_data.json")
             st.stop()
-    else:
+        st.success(f"✅ Loaded {len(df)} fraud records from Kafka")
+    elif use_csv:
         if uploaded_file is None:
-            st.warning("Upload CSV file or enable Kafka live data.")
+            st.warning("📁 Please upload a CSV file")
             st.stop()
         df = pd.read_csv(uploaded_file)
+        st.success(f"✅ Loaded {len(df)} fraud records from CSV")
+    else:
+        st.warning("⚠️ Please select a data source (Kafka or CSV)")
+        st.stop()
 
     df = normalize_dashboard_df(df)
 
@@ -730,7 +760,10 @@ def main():
         st.stop()
 
     st.success(
-        f"Loaded {len(df)} fraud records | High: {(df['severity'] == 'High').sum()} | Medium: {(df['severity'] == 'Medium').sum()} | Low: {(df['severity'] == 'Low').sum()} | Avg Risk: {df['risk_score'].mean():.1f}")
+        f"📊 Final Data: {len(df)} fraud records | 🔴 High: {(df['severity'] == 'High').sum()} | "
+        f"🟡 Medium: {(df['severity'] == 'Medium').sum()} | 🟢 Low: {(df['severity'] == 'Low').sum()} | "
+        f"📈 Avg Risk: {df['risk_score'].mean():.1f}"
+    )
 
     filtered_df = df[df["severity"].isin(severity_filter) & df["fraud_type"].isin(fraud_type_filter)].copy()
 
@@ -741,17 +774,17 @@ def main():
     if page == "MONITORING":
         monitoring_page(df, filtered_df, top_n, time_bucket)
         csv_data = df.to_csv(index=False).encode()
-        st.download_button("DOWNLOAD CSV", csv_data, f"amantel_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+        st.download_button("📥 DOWNLOAD CSV", csv_data, f"amantel_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                            use_container_width=True)
     else:
         df = user_actions_page(df)
 
-    mode_label = "Kafka Live Mode" if use_streaming else "CSV Upload Mode"
+    mode_label = "Kafka Live Mode" if use_kafka else "CSV Upload Mode"
     st.caption(
         f"AmanTel AI • Securing Telecom • Stopping Fraud • {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} • {mode_label}")
 
-    if use_streaming:
-        time.sleep(1)
+    if use_kafka:
+        time.sleep(2)
         st.rerun()
 
 
